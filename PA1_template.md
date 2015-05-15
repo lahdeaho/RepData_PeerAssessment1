@@ -1,21 +1,24 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
-```{r setoptions, echo=FALSE, results = "hide"}
-library('knitr')
-opts_chunk$set(echo=TRUE, results = "hide", cache = FALSE)
-library('dplyr')
-library('lubridate')
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
 ```
 
 ## Loading and preprocessing the data
 
 Following code loads and transfers the data.
-```{r loading}
+
+```r
 d <- read.csv("F:\\r\\activity.csv")
 dt <- tbl_df(d)
 stepsTotal <- summarise(group_by(dt, date), steps = sum(steps))
@@ -29,7 +32,8 @@ maxSteps <- filter(stepsMean, steps == max(stepsMean$steps))
 ## What is mean total number of steps taken per day?
 
 Following code draws the chart.
-```{r average number of steps, results = "asis", fig.width=10}
+
+```r
 par(mar = c(5, 4, 2, 2))
 barplot(stepsTotal$steps, 
         names.arg = stepsTotal$date, 
@@ -43,13 +47,16 @@ barplot(stepsTotal$steps,
         las = 2)
 ```
 
-Mean of total number of steps taken each day is `r as.character(meanSteps)` steps.
-The median is `r as.character(medianSteps)` steps.
+![](PA1_template_files/figure-html/average number of steps-1.png) 
+
+Mean of total number of steps taken each day is 10766.19 steps.
+The median is 10765 steps.
 
 ## What is the average daily activity pattern?
 
 Following code draws the chart.
-```{r activity pattern, results = "asis", fig.width=10}
+
+```r
 par(mar = c(5, 4, 2, 2))
 plot(stepsMean$interval, stepsMean$steps, 
         ylab = "Average Number of Steps", 
@@ -80,23 +87,27 @@ legend(x = "topright",
        lwd = 1) 
 ```
 
-The 5-minute interval `r as.character(round(max(maxSteps$interval)))`, on average across all the days in the dataset, contains the maximum number of steps `r as.character(round(max(maxSteps$steps)))`. The point is marked in the chart as black vertical line.
+![](PA1_template_files/figure-html/activity pattern-1.png) 
+
+The 5-minute interval 835, on average across all the days in the dataset, contains the maximum number of steps 206. The point is marked in the chart as black vertical line.
 
 ## Imputing missing values
 
 Following code calculates rows.
-```{r missing values}
+
+```r
 missing <- filter(dt, is.na(steps))
 mrows <- length(missing$steps)
 trows <- length(dt$date)
 ```
 
-The total number of rows with NA's is `r mrows` of `r trows` (`r round(mrows / trows * 100, 1)` %).
+The total number of rows with NA's is 2304 of 17568 (13.1 %).
 
 The following dataset has filled those NA rows with average of same 5-minutes interval across the whole dataset.
 
 The code for filling missing values.
-```{r strategy}
+
+```r
 dtFix <- right_join(dt, stepsMean, by = "interval")
 dtFix <- mutate(dtFix, steps = ifelse(is.na(steps.x), round(steps.y), round(steps.x)))
 stepsTotalFix <- summarise(group_by(dtFix, date), steps = sum(steps))
@@ -106,7 +117,8 @@ medianStepsFix <- round(median(stepsTotalFix$steps, na.rm=TRUE), 2)
 ```
 
 Following code draws the chart.
-```{r new average number of steps, results = "asis", fig.width=10}
+
+```r
 par(mar = c(6, 6, 2, 2))
 barplot(stepsTotalFix$steps, 
         names.arg = stepsTotalFix$date, 
@@ -120,13 +132,16 @@ barplot(stepsTotalFix$steps,
         las = 2)
 ```
 
-Mean of total number of steps taken each day is `r as.character(meanStepsFix)` steps (change `r meanStepsFix-meanSteps` steps).
-The median is `r as.character(medianStepsFix)` steps (change `r medianStepsFix-medianSteps` steps).
+![](PA1_template_files/figure-html/new average number of steps-1.png) 
+
+Mean of total number of steps taken each day is 10765.64 steps (change -0.55 steps).
+The median is 10762 steps (change -3 steps).
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
 Following code fixes the data for weekdays.
-```{r weekdays}
+
+```r
 #Finnish day labels
 weekdaynames <- c('maanantai', 'tiistai', 'keskiviikko', 'torstai', 'perjantai')
 dtFix <- mutate(dtFix, 
@@ -134,11 +149,11 @@ dtFix <- mutate(dtFix,
                levels=1:2,
                labels=c('weekend', 'weekday')))
 stepsMeanWd <- summarise(group_by(dtFix, interval, dayType), steps = mean(steps))
-
 ```
 
 Following code draws the chart.
-```{r weekdays chart, results = "asis", fig.width=10}
+
+```r
 par(mfrow=c(1,2))
 #Left-panel
 plot((filter(stepsMeanWd, dayType == 'weekend'))$interval, 
@@ -157,4 +172,6 @@ plot((filter(stepsMeanWd, dayType == 'weekday'))$interval,
      ylab = "",
      main = "Weekdays")
 ```
+
+![](PA1_template_files/figure-html/weekdays chart-1.png) 
 
