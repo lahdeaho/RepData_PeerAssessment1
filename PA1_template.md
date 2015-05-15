@@ -1,18 +1,12 @@
-# Reproducible Research: Peer Assessment 1
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+    self_contained: false
+---
 
 
-```
-## 
-## Attaching package: 'dplyr'
-## 
-## The following object is masked from 'package:stats':
-## 
-##     filter
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
 
 ## Loading and preprocessing the data
 
@@ -47,7 +41,7 @@ barplot(stepsTotal$steps,
         las = 2)
 ```
 
-![](PA1_template_files/figure-html/average number of steps-1.png) 
+![plot of chunk average number of steps](figure/average number of steps-1.png) 
 
 Mean of total number of steps taken each day is 10766.19 steps.
 The median is 10765 steps.
@@ -87,7 +81,7 @@ legend(x = "topright",
        lwd = 1) 
 ```
 
-![](PA1_template_files/figure-html/activity pattern-1.png) 
+![plot of chunk activity pattern](figure/activity pattern-1.png) 
 
 The 5-minute interval 835, on average across all the days in the dataset, contains the maximum number of steps 206. The point is marked in the chart as black vertical line.
 
@@ -132,7 +126,7 @@ barplot(stepsTotalFix$steps,
         las = 2)
 ```
 
-![](PA1_template_files/figure-html/new average number of steps-1.png) 
+![plot of chunk new average number of steps](figure/new average number of steps-1.png) 
 
 Mean of total number of steps taken each day is 10765.64 steps (change -0.55 steps).
 The median is 10762 steps (change -3 steps).
@@ -173,5 +167,5 @@ plot((filter(stepsMeanWd, dayType == 'weekday'))$interval,
      main = "Weekdays")
 ```
 
-![](PA1_template_files/figure-html/weekdays chart-1.png) 
+![plot of chunk weekdays chart](figure/weekdays chart-1.png) 
 
